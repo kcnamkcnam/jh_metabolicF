@@ -6,18 +6,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Metabolic Flux Analysis">
         <meta name="author" content="Rachel Ki">
-        <!--
-        <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
-        <link rel="stylesheet" href="styles.css">
-        background-image: url("bioengineering.jpg");
-        -->
+        
         <style>
             .low-opacity-image {
                 width: 100%;
                 height: 100vh;
                 align-items: center;
-                font-size: 3rem;
-                background-image: linear-gradient(45deg, rgba(255, 0, 0, 0.5), rgba(255, 166, 0, 0.5), rgba(0, 0, 255, 0.44)), url("https://www.uclaextension.edu/sites/default/files/styles/common_hero/public/2017-10/bioengineering-fos-header.jpg?itok=D3ElKl95");
+                font-size: 2rem;
+                background-image: linear-gradient(45deg, rgba(255, 0, 0, 0.5), rgba(255, 166, 0, 0.5), rgba(0, 0, 255, 0.44)), url("/static/bioengineering.jpg");
                 background-size: cover;
                 background-position: center;
                 display: flex;
@@ -40,17 +36,12 @@
 
     <body>
         <div class="alert alert-success" role="alert" style="background: #FFBF00; height: 10px;"><A:blank></A:blank></div>
-     <!--
-        <div class="alert alert-success" role="alert" style="background: #FFBF00; height: 22px; padding: 7px 5px;">Alert</div>
-    
-    <div style="text-align:center; padding: 45px 35px; font-size: 3rem; display: block; background: #1e4b87; height: 65px; color: white; font-family: Proxima Nova;">Metabolic Flux Analysis</div>
-        -->
         <div style="text-align:center; font-size: 3rem; display: block; background: #1e4b87; height: 80px; color: white; font-family: Proxima Nova; position: relative;">Metabolic Flux Analysis</div>
         
         <ul>
-            <li class="inline-item">News</li>
-            <li class="inline-item">Team</li>
-            <li class="inline-item">Contact</li>
+            <li class="inline-item">
+                <a href="https://parklab.ucla.edu" style="--bs-link-opacity: 2; font-size: 1.2rem;">Contact</a>
+            </li>
             <li class="inline-item"><A:blank></A:blank></li>
             <li class="inline-item"><A:blank></A:blank></li>
             <li class="inline-item"><A:blank></A:blank></li>
@@ -72,7 +63,23 @@
             </li>
         </ul>
         <div class="low-opacity-image">
-            <p>Metabolic Flux Analysis ?</p>
+                
+            <form method="post" action="/testsum" enctype="multipart/form-data">
+                <label for="formFileLg" class="form-label">Select the file you want to sum up:</label>
+                <input class="form-control form-control-lg" id="formFileLg" name="input_file" type="file">
+                <button type="submit" class="btn btn-success btn-lg" disabled>Process the file</button>
+                <script >
+                    const btn = document.querySelector('.btn-success');
+                    var file = document.getElementById("formFileLg");
+                    file.addEventListener("input", () => {
+                        // if user selects a file
+                        if (file.files.length) {
+                            btn.disabled = false; //enable the process button.
+                        }
+                    });
+                   
+                </script>
+            </form>
         </div> 
         
         <!-- Bootstrap core JavaScript
