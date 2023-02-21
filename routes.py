@@ -22,8 +22,15 @@ app.config["SECRET_KEY"] = "aoejfakcjefwejanavvnakdaeofwvoiejqporafda"
 
 comments = []
 @app.route('/')
-@app.route('/index')
+@app.route('/index', methods=["GET", "POST"])
 def index():
+    if request.method == 'POST':
+        input_file = request.files["input_file"]
+        input_data = input_file.stream.read().decode("utf-8")
+        output_data = process_data(input_data)
+        response = make_response(output_data)
+        response.headers["Content-Disposition"] = "attachment; filename=result.csv"
+        return response
     return render_template("index.html", comments=comments)
 
 @app.route("/testcomments", methods=["GET", "POST"])
