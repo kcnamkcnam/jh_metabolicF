@@ -1,8 +1,8 @@
-from flask import request, session, redirect, url_for, make_response, render_template
+from flask import request, session, redirect, url_for, make_response, render_template, send_file
 from app import app
-from processing import do_addition, get_mode, process_data
+from processing import do_addition, get_mode, process_data, process_file
 import sys
-
+import os
 
 # disable debug for production
 app.config["DEBUG"] = True
@@ -15,7 +15,6 @@ app.config["SECRET_KEY"] = "aoejfakcjefwejanavvnakdaeofwvoiejqporafda"
 
 # Check credentials, modify session, etc.
 #@app.before_request
-#def before_request():
 #    if 'session_start' not in session:
 #        session['session_start'] = datetime.datetime.now()
 #    session['last_action'] = datetime.datetime.now()
@@ -26,12 +25,16 @@ comments = []
 def index():
     if request.method == 'POST':
         input_file = request.files["input_file"]
-        input_data = input_file.stream.read().decode("utf-8")
-        output_data = process_data(input_data)
-        response = make_response(output_data)
-        response.headers["Content-Disposition"] = "attachment; filename=result.csv"
-        return response
-    return render_template("index.html", comments=comments)
+        result_file = process_file(input_file)
+        file_path = "./matlab/" + result_file
+        return send_file(file_path, as_attachment=True)
+        
+        #input_data = input_file.stream.read().decode("utf-8")
+        #output_data = process_data(input_data)
+        #response = make_response(output_data)
+        #response.headers["Content-Disposition"] = "attachment; filename=result.csv"
+        
+    return render_template("index.html")
 
 @app.route("/testcomments", methods=["GET", "POST"])
 def comments_page():
