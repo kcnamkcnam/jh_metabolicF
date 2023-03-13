@@ -4,6 +4,7 @@ from processing import do_addition, get_mode, process_data, process_file
 import sys
 import os
 
+Home_dir = os.getcwd()
 # disable debug for production
 app.config["DEBUG"] = True
 app.config["SECRET_KEY"] = "aoejfakcjefwejanavvnakdaeofwvoiejqporafda"
@@ -23,9 +24,11 @@ comments = []
 @app.route('/')
 @app.route('/index', methods=["GET", "POST"])
 def index():
+    os.chdir(Home_dir)
     if request.method == 'POST':
         input_file = request.files["input_file"]
         result_file = process_file(input_file)
+        print("o:" + result_file, flush=True)
         file_path = "./matlab/" + result_file
         return send_file(file_path, as_attachment=True)
         
