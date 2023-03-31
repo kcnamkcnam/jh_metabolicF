@@ -28,7 +28,7 @@ def index():
     if request.method == 'POST':
         input_file = request.files["input_file"]
         result_file = process_file(input_file)
-        print("o:" + result_file, flush=True)
+        #print("o:" + result_file, flush=True)
         file_path = "./matlab/" + result_file
         return send_file(file_path, as_attachment=True)
         
