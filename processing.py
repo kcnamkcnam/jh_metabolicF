@@ -22,10 +22,11 @@ def process_file(input_file):
         eng.eval(line, nargout=0)
     eng.simple1(nargout=0)
 
-    # concatenate all 4 output files crated by simple1.m (matlab script)
+    # clean-up; remove all "result_xxxxx.csv" file
     for file in glob.glob("result_[0-9]*-[0-9]*.csv"):
         os.remove(file)
-     
+        
+    # create "result_xxxx.csv" file by concatenate all 4 output files crated by simple1.m (matlab script) 
     with open(output_filename, 'w') as outfile:
         for o in output_var:
             if os.path.exists(o + ".txt"):
