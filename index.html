@@ -10,7 +10,7 @@
         <style>
             .low-opacity-image {
                 width: 100%;
-                height: 70vh;
+                height: 70vh; 
                 align-items: center;
                 font-size: 2rem;
                 background-image: linear-gradient(45deg, rgba(255, 0, 0, 0.5), rgba(255, 166, 0, 0.5), rgba(0, 0, 255, 0.44)), url("/static/bioengineering.jpg");
@@ -36,7 +36,7 @@
                 left: 50%;
                 text-align: center;
                 transform: translate(-50%, -50%);
-                padding: 10px 45px 20px 75px;
+                padding: 60px 55px 30px 85px;
                 color: #333;
                 visibility: hidden;
             }
@@ -54,7 +54,7 @@
             }
         </style>
 
-        <!-- Bootstrap core CSS  -->
+        <!-- Bootstrap core CSS  transform: translate(-50%, -50%); -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     </head>
 
@@ -88,9 +88,17 @@
         </ul>
         <div class="low-opacity-image">
             <form method="post" action="/index" enctype="multipart/form-data">
-                <label for="formFileLg" class="form-label">Select the file you want to process:</label>
+                <label for="formFileLg" class="form-label">Please Enter The Following Data:</label>
                 <input class="form-control form-control-lg" id="formFileLg" name="input_file" type="file">
-                <button type="submit" class="btn btn-success btn-lg" onclick="openPopup()" disabled>Process the file</button>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text">Sheets&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <input class="form-control" id="sheets" placeholder="&quot;1,3_13C&quot;, &quot;2&quot;, &quot;3&quot;" name="sheets" type="text">
+                </div>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text">Exp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <input class="form-control" id="exp" placeholder="&quot;U&quot;, &quot;C1&quot;, &quot;C2&quot;" name="exp" type="text">
+                </div>
+                <button type="submit" class="btn btn-success btn-lg" onclick="openPopup()" disabled>Process Data</button>
                 <div class="popup" id="popup">
                     <div class="popup-header">
                         <h2>Processing...</h2>
@@ -105,29 +113,51 @@
                     const btn = document.querySelector('.btn-success');
                     var file = document.getElementById("formFileLg");
                     var popup = document.getElementById("popup");
-
+                    var sheets = document.getElementById("sheets");
+                    var exp = document.getElementById("exp");
+                    
                     file.addEventListener("input", () => {
-                        // if user selects a file     
-                        if (file.files.length) {
-                            btn.disabled = false; //enable the process button.
+                        // if all input data is entered, then enable the process button.     
+                        if (file.files.length && exp.value.length && sheets.value.length){
+                            btn.disabled = false; 
+                        } else {
+                            btn.disabled = true;
                         }
                     });
+                    sheets.addEventListener("input", () => {
+                        // if all input data is entered, then enable the process button.     
+                        if (file.files.length && exp.value.length && sheets.value.length){
+                            btn.disabled = false; 
+                        } else {
+                            btn.disabled = true;
+                        } 
+                    });
+                    exp.addEventListener("input", () => {
+                        // if all input data is entered, then enable the process button.     
+                        if (file.files.length && exp.value.length && sheets.value.length){
+                            btn.disabled = false; 
+                        } else {
+                            btn.disabled = true;
+                        } 
+                    });
+
                     function openPopup(){
-                        
                         if (popup.classList.length > 1) {
-                            popup.classList.replace("close-popup", "open-popup")
+                            popup.classList.replace("close-popup", "open-popup");
                         } else{
                             popup.classList.add("open-popup");
                         }
                     }
                     function closePopup(){
                         if (popup.classList.length > 1) {
-                            popup.classList.replace("open-popup", "close-popup")
+                            popup.classList.replace("open-popup", "close-popup");
                         } else{
                             popup.classList.add("close-popup");
                         }
                         btn.disabled = true; //disable the process button.
-                        file.value = ""; // reset the file form.
+                        file.value = "";     // reset the file form.
+                        sheets.value = "";   // reset the sheets input
+                        exp.value = "";       // reset the exp input
                     }
                 </script>
             </form>
