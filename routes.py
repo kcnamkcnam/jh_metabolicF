@@ -1,7 +1,6 @@
 from flask import request, session, redirect, url_for, make_response, render_template, send_file
 from app import app
-from processing import do_addition, get_mode, process_data, process_file
-import sys
+from processing import do_addition, get_mode, process_data, process_input
 import os
 
 Home_dir = os.getcwd()
@@ -26,11 +25,14 @@ comments = []
 def index():
     os.chdir(Home_dir)
     if request.method == 'POST':
+        # get input data (file, sheets, exp)
         input_file = request.files["input_file"]
-        result_file = process_file(input_file)
-        #print("o:" + result_file, flush=True)
-        file_path = "./matlab/" + result_file
-        return send_file(file_path, as_attachment=True)
+        sheets_str = request.form.get("sheets")
+        exp_str = request.form.get("exp")
+
+        result_file = process_input(input_file, sheets_str, exp_str)
+        file_path = "./jupyter/" + result_file
+        return send_file(file_path, as_attachment=True) # download the result file to the user.
         
         #input_data = input_file.stream.read().decode("utf-8")
         #output_data = process_data(input_data)
