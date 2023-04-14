@@ -5,7 +5,7 @@ import glob
 import pandas as pd
 import numpy as np
 import xml.etree.ElementTree as et
-import ast
+import re
 
 
 def get_mode(number_list):
@@ -36,18 +36,16 @@ def process_input(input_file, sheets_str, exp_str):
     input_file.save(process_dir + input_file.filename) #upload user input file.
     xlsname = input_file.filename #user input file name
 
-    #sheets = ["1,3_13C", "2", "3"]
-    #when the user enters "None" or Nothing for the sheets, set the default value "None"
-    sheets_tmp = sheets_str.replace('"', '') # remove all ""
+    #when the user enters "None" or Nothing in sheets field, set the default value "None"
+    sheets_tmp = sheets_str.replace('"', '') # remove all quotation marks
     if sheets_str == "" or sheets_tmp.upper() == "NONE" :
         sheets = None
     else:
-        sheets_tuple = ast.literal_eval(sheets_str) #convert string input to list type.
-        sheets = list(sheets_tuple) # convert to list
+        sheets = re.findall(r'"(.*?)"', sheets_str) #convert string input to list type.
+    #sheets = ["1,3_13C", "2", "3"]
     
+    exp = re.findall(r'"(.*?)"', exp_str) #convert string input to list type.
     #exp = ["U", "C1", "C2"] #user input
-    exp_tuple = ast.literal_eval(exp_str) #convert string input to list type.
-    exp = list(exp_tuple) # convert to list
 
     xmlname='simple1.xml' #specify this for each model
     lmid=4 #specify this for each model
