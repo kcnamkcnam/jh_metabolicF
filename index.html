@@ -117,24 +117,16 @@
                     var exp = document.getElementById("exp");
                     
                     file.addEventListener("input", () => {
-                        // if all input data is entered, then enable the process button.     
-                        if (file.files.length && exp.value.length && sheets.value.length){
+                        // if both file and exp inputs are entered, then enable the process button.     
+                        if (file.files.length && exp.value.length){
                             btn.disabled = false; 
                         } else {
                             btn.disabled = true;
                         }
                     });
-                    sheets.addEventListener("input", () => {
-                        // if all input data is entered, then enable the process button.     
-                        if (file.files.length && exp.value.length && sheets.value.length){
-                            btn.disabled = false; 
-                        } else {
-                            btn.disabled = true;
-                        } 
-                    });
                     exp.addEventListener("input", () => {
-                        // if all input data is entered, then enable the process button.     
-                        if (file.files.length && exp.value.length && sheets.value.length){
+                        // if both file and exp inputs are entered, then enable the process button.     
+                        if (file.files.length && exp.value.length){
                             btn.disabled = false; 
                         } else {
                             btn.disabled = true;
