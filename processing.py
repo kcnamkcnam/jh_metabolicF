@@ -39,7 +39,7 @@ def process_input(input_file, sheets_str, exp_str):
     #sheets = ["1,3_13C", "2", "3"]
     #when the user enters "None" or Nothing for the sheets, set the default value "None"
     sheets_tmp = sheets_str.replace('"', '') # remove all ""
-    if sheets_tmp == "" or sheets_tmp.upper() == "NONE" :
+    if sheets_str == "" or sheets_tmp.upper() == "NONE" :
         sheets = None
     else:
         sheets_tuple = ast.literal_eval(sheets_str) #convert string input to list type.
