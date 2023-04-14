@@ -37,8 +37,13 @@ def process_input(input_file, sheets_str, exp_str):
     xlsname = input_file.filename #user input file name
 
     #sheets = ["1,3_13C", "2", "3"]
-    sheets_tuple = ast.literal_eval(sheets_str) #convert string input to list type.
-    sheets = list(sheets_tuple) # convert to list
+    #when the user enters "None" or Nothing for the sheets, set the default value "None"
+    sheets_tmp = sheets_str.replace('"', '') # remove all ""
+    if sheets_tmp == "" or sheets_tmp.upper() == "NONE" :
+        sheets = None
+    else:
+        sheets_tuple = ast.literal_eval(sheets_str) #convert string input to list type.
+        sheets = list(sheets_tuple) # convert to list
     
     #exp = ["U", "C1", "C2"] #user input
     exp_tuple = ast.literal_eval(exp_str) #convert string input to list type.
