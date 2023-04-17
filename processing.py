@@ -27,9 +27,7 @@ def d2b(d, n):
     b = np.fliplr(b)
     return b
 
-def process_input(input_file, sheets_str, exp_str):
-    home_dir = os.getcwd()
-    process_dir = os.getcwd() + "/app/jupyter/"
+def process_input(input_file, sheets_str, exp_str, process_dir):
     output_filename = f'result_{str(datetime.now().strftime("%Y%m%d-%H%M%S"))}.csv'
     
     os.chdir(process_dir)
@@ -105,7 +103,6 @@ def process_input(input_file, sheets_str, exp_str):
     if os.path.exists(xlsname):
         os.remove(xlsname)
 
-    os.chdir(home_dir)
     return output_filename
     
 def process_data(input_data):
