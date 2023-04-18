@@ -28,12 +28,14 @@ def d2b(d, n):
     return b
 
 def process_input(input_file, sheets_str, exp_str, process_dir):
-    output_filename = f'result_{str(datetime.now().strftime("%Y%m%d-%H%M%S"))}.csv'
-    
-    os.chdir(process_dir)
-    input_file.save(process_dir + input_file.filename) #upload user input file.
-    xlsname = input_file.filename #user input file name
+    t = f'result_{str(datetime.now().strftime("%Y%m%d-%H%M%S"))}.csv'
+    output_filename = process_dir + t
 
+    input_file.save(process_dir + input_file.filename) #upload user input file.
+
+    t = input_file.filename #user input file name
+    xlsname = process_dir + t
+    
     #when the user enters "None" or Nothing in sheets field, set the default value "None"
     sheets_tmp = sheets_str.replace('"', '') # remove all quotation marks
     if sheets_str == "" or sheets_tmp.upper() == "NONE" :
@@ -45,7 +47,7 @@ def process_input(input_file, sheets_str, exp_str, process_dir):
     exp = re.findall(r'"(.*?)"', exp_str) #convert string input to list type.
     #exp = ["U", "C1", "C2"] #user input
 
-    xmlname='simple1.xml' #specify this for each model
+    xmlname= process_dir + 'simple1.xml' #specify this for each model
     lmid=4 #specify this for each model
     tracer = "input" #fixed variable for the excel sheet where tracers are
 
@@ -89,8 +91,8 @@ def process_input(input_file, sheets_str, exp_str, process_dir):
     #print(vec)
     #print("pro_di:" + aa, flush=True)
 
-   # remove any existing "result_xxxx.csv" file before create a new one.
-    for file in glob.glob("result_[0-9]*-[0-9]*.csv"):
+    # remove any existing "result_xxxx.csv" file before create a new one.
+    for file in glob.glob(process_dir + "result_[0-9]*-[0-9]*.csv"):
         os.remove(file)
 
     # create an output file(result_xxxx.csv) 
