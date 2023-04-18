@@ -29,11 +29,11 @@ def index():
         input_file = request.files["input_file"]
         sheets_str = request.form.get("sheets")
         exp_str = request.form.get("exp")
-        process_dir = os.getcwd() + "/app/jupyter/"
+        tmp = os.path.dirname(app.instance_path)
+        process_dir = tmp + "/app/static/"
 
         result_file = process_input(input_file, sheets_str, exp_str, process_dir)
-        file_path = process_dir + result_file
-        return send_file(file_path, as_attachment=True) # download the result file to the user.
+        return send_file(result_file, as_attachment=True) # download the result file to the user.
         
         #input_data = input_file.stream.read().decode("utf-8")
         #output_data = process_data(input_data)
