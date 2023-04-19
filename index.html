@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Metabolic Flux Analysis">
-        <meta name="author" content="Rachel Ki">
+        <meta name="author" content="Jun Park, Rachel Ki, Richard Law">
         
         <style>
             .low-opacity-image {
@@ -20,13 +20,43 @@
                 place-content: center;
                 color: white;
                 text-align: center;
+                border: 1px solid rgb(243, 246, 243);
             } 
-            .inline-item {
+            .side-text{
+                min-width: 0px;
+                height: 100%;
+                background: #f44336;
+                margin-right: 5px;
+                line-height: 0;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                overflow: hidden;
+                justify-content: center;
+                border-radius: 5px 0 0 5px;
+            }           
+            .icon .bi{
+                color:white;
+            }
+            .icon:hover .bi{
+                color: black;
+            }
+            .footer {
                 padding: auto;
-                display: inline-block;
-                text-align: center;
-                text-indent: 15px;
-                color: #2200ff;
+                width: 100%; 
+                line-height: 25px;
+                font-size: 13px;
+                display: block;
+                text-align: left;
+                position: relative;
+                
+            } 
+            .footer_link {
+                padding: 8px 1px 1px 1px;
+                display: inline-flex;
+                color: #2774ae;
+                text-decoration: none; 
+                font-weight: bold;
             }  
             .popup {
                 background: #fff;
@@ -52,51 +82,50 @@
             .close-popup{
                 visibility: hidden;
             }
+            .dropdown-visible{
+                visibility: visible;
+            }
+            .dropdown-hidden{
+                visibility: hidden;
+            }
         </style>
 
-        <!-- Bootstrap core CSS  transform: translate(-50%, -50%); -->
+        <!-- Bootstrap core CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+        <!-- Bootstrap icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
     </head>
 
     <body>
         <div class="alert alert-success" role="alert" style="background: #FFBF00; height: 10px;"><A:blank></A:blank></div>
-        <div style="text-align:center; font-size: 3rem; display: block; background: #1e4b87; height: 80px; color: white; font-family: Proxima Nova; position: relative;">Metabolic Flux Analysis</div>
+        <div id="page_header" style="text-align:center; font-size: 3rem; display:block; background: #1e4b87; height: 80px; color: white; font-family: Proxima Nova; position: relative;">
+            <div id="texts" style="display:inline-block">ML-Flux&nbsp;&nbsp;&nbsp;&nbsp;</div>
+            <div id="image" style="display:inline-block">
+                <img src="/static/ucla_logo.png" alt="logo" style="width: 80px; height: 35px;"/>
+            </div>
+        </div>
         
-        <ul>
-            <li class="inline-item">
-                <a href="https://parklab.ucla.edu" style="--bs-link-opacity: 2; font-size: 1.2rem;">Contact</a>
-            </li>
-            <li class="inline-item"><A:blank></A:blank></li>
-            <li class="inline-item"><A:blank></A:blank></li>
-            <li class="inline-item"><A:blank></A:blank></li>
-            <li class="inline-item"><A:blank></A:blank></li>
-            <li class="inline-item"><A:blank></A:blank></li>
-            <li class="inline-item"><A:blank></A:blank></li>
-            <li class="inline-item">TEST:</li>
-            <li class="inline-item">
-                <a href="/testcomments">testcomments</a>
-            </li>
-            <li class="inline-item">
-                <a href="/testadd">testadd</a>
-            </li>
-            <li class="inline-item">
-                <a href="/testmode">testmode</a>
-            </li>
-            <li class="inline-item">
-                <a href="/testsum">testsum</a>
-            </li>
-        </ul>
         <div class="low-opacity-image">
             <form method="post" action="/index" enctype="multipart/form-data">
                 <label for="formFileLg" class="form-label">Please Enter The Following Data:</label>
+                <span class="icon">
+                        <abbr title="help message" style="transition-delay: 0.1s; transition:0.1s;">
+                            <i class="bi bi-question-circle"></i>
+                        </abbr>
+                </span>
                 <input class="form-control form-control-lg" id="formFileLg" name="input_file" type="file">
                 <div class="input-group input-group-lg">
                     <span class="input-group-text">Sheets&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     <input class="form-control" id="sheets" placeholder="&quot;1,3_13C&quot;, &quot;2&quot;, &quot;3&quot;" name="sheets" type="text">
                 </div>
                 <div class="input-group input-group-lg">
-                    <span class="input-group-text">Exp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <input class="form-control" id="exp" placeholder="&quot;U&quot;, &quot;C1&quot;, &quot;C2&quot;" name="exp" type="text">
+                    <button class="btn btn-light dropdown-toggle" id="dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                    <input class="form-control" id="dropdown-txt" name="dropdown-txt" type="text">
                 </div>
                 <button type="submit" class="btn btn-success btn-lg" onclick="openPopup()" disabled>Process Data</button>
                 <div class="popup" id="popup">
@@ -113,20 +142,21 @@
                     const btn = document.querySelector('.btn-success');
                     var file = document.getElementById("formFileLg");
                     var popup = document.getElementById("popup");
+                    var dropdown = document.getElementById("dropdown");
                     var sheets = document.getElementById("sheets");
                     var exp = document.getElementById("exp");
                     
                     file.addEventListener("input", () => {
-                        // if both file and exp inputs are entered, then enable the process button.     
-                        if (file.files.length && exp.value.length){
+                        // if both file and sheets inputs are entered, then enable the process button.     
+                        if (file.files.length) {
                             btn.disabled = false; 
                         } else {
                             btn.disabled = true;
                         }
                     });
-                    exp.addEventListener("input", () => {
-                        // if both file and exp inputs are entered, then enable the process button.     
-                        if (file.files.length && exp.value.length){
+                    sheets.addEventListener("input", () => {
+                        // if both file and sheets inputs are entered, then enable the process button.     
+                        if (file.files.length && sheets.value.length){
                             btn.disabled = false; 
                         } else {
                             btn.disabled = true;
@@ -135,17 +165,29 @@
 
                     function openPopup(){
                         if (popup.classList.length > 1) {
-                            popup.classList.replace("close-popup", "open-popup");
-                        } else{
-                            popup.classList.add("open-popup");
+                            //popup.classList.replace("close-popup", "open-popup");
+                            popup.classList.remove("close-popup");
                         }
+                        //if (dropdown.classList.length > 1) {
+                            //dropdown.classList.replace("dropdown-visible", "dropdown-hidden");
+                        //    dropdown.classList.remove("dropdown-visible");
+                        //}
+                        popup.classList.add("open-popup");
+                        //dropdown.classList.add("dropdown-hidden");
+                        setTimeout(()=>popup.classList.add("close-popup"), 1500);
+                        //setTimeout(()=>dropdown.classList.add("dropdown-visible"), 1500);
+                        
                     }
                     function closePopup(){
                         if (popup.classList.length > 1) {
-                            popup.classList.replace("open-popup", "close-popup");
-                        } else{
-                            popup.classList.add("close-popup");
+                            //popup.classList.replace("open-popup", "close-popup");
+                            popup.classList.remove("open-popup");
+                        } 
+                        if (dropdown.classList.length > 1) {
+                            dropdown.classList.remove("dropdown-hidden");
                         }
+                        popup.classList.add("close-popup");
+                        dropdown.classList.add("dropdown-visible");
                         btn.disabled = true; //disable the process button.
                         file.value = "";     // reset the file form.
                         sheets.value = "";   // reset the sheets input
@@ -154,12 +196,14 @@
                 </script>
             </form>
         </div> 
-        
-        <!-- Bootstrap core JavaScript
+        <div class="footer">
+            <p class="copyright" style="display:inline-block; text-indent: 25px;">© 2023 Regents of the</p>
+            <a class="footer_link" href="http://www.universityofcalifornia.edu/">University of California</a>
+            <a class="footer_link" style="transform: translateX(470%);" href="https://parklab.ucla.edu">CONTACT</a>
+        </div>
+        <!-- Bootstrap core JavaScript 
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     </body>
-
- </html>
+</html>
