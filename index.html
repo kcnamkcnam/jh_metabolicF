@@ -99,10 +99,7 @@
     <body>
         <div class="alert alert-success" role="alert" style="background: #FFBF00; height: 10px;"><A:blank></A:blank></div>
         <div id="page_header" style="text-align:center; font-size: 3rem; display:block; background: #1e4b87; height: 80px; color: white; font-family: Proxima Nova; position: relative;">
-            <div id="texts" style="display:inline-block">ML-Flux&nbsp;&nbsp;&nbsp;&nbsp;</div>
-            <div id="image" style="display:inline-block">
-                <img src="/static/ucla_logo.png" alt="logo" style="width: 80px; height: 35px;"/>
-            </div>
+            <div id="texts" style="display:inline-block">Metabolic Flux Analysis</div>
         </div>
         
         <div class="low-opacity-image">
@@ -165,22 +162,18 @@
 
                     function openPopup(){
                         if (popup.classList.length > 1) {
-                            //popup.classList.replace("close-popup", "open-popup");
                             popup.classList.remove("close-popup");
                         }
-                        //if (dropdown.classList.length > 1) {
-                            //dropdown.classList.replace("dropdown-visible", "dropdown-hidden");
-                        //    dropdown.classList.remove("dropdown-visible");
-                        //}
+                        if (dropdown.classList.length > 1) {
+                            dropdown.classList.remove("dropdown-visible");
+                        }
                         popup.classList.add("open-popup");
-                        //dropdown.classList.add("dropdown-hidden");
-                        setTimeout(()=>popup.classList.add("close-popup"), 1500);
-                        //setTimeout(()=>dropdown.classList.add("dropdown-visible"), 1500);
-                        
+                        dropdown.classList.add("dropdown-hidden");
+                        setTimeout(()=>{dropdown.classList.replace("dropdown-hidden", "dropdown-visible"); popup.classList.replace("open-popup", "close-popup");}, 1500);
                     }
+
                     function closePopup(){
                         if (popup.classList.length > 1) {
-                            //popup.classList.replace("open-popup", "close-popup");
                             popup.classList.remove("open-popup");
                         } 
                         if (dropdown.classList.length > 1) {
