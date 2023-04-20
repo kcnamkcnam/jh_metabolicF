@@ -99,11 +99,6 @@
                         <i class="bi bi-question-circle"></i>    
                     </abbr>
                 </span>
-                <input class="form-control form-control-lg" id="formFileLg" name="input_file" type="file"> <!--file input -->
-                <div class="input-group input-group-lg">    <!--sheet input -->
-                    <span class="input-group-text">Sheets&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <input class="form-control" id="sheets" placeholder="&quot;1,3_13C&quot;, &quot;2&quot;, &quot;3&quot;" name="sheets" type="text">
-                </div>
                 <div class="input-group input-group-lg">    <!--model input -->
                     <!--dropdown;  the first item "Model"is defalut value and the selected value will be put into the text field next to it -->
                     <select class="btn btn-light dropdown-toggle" id="dropdown" onchange="getDropdownVal();" name="dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -114,6 +109,11 @@
                     </select>
                     <!--model text filed; since it is readonly, the user has to select a model from the dropdown -->
                     <input class="form-control" id="dropdownTxt" name="dropdownTxt" placeholder="No Model Chosen" type="text" readonly> 
+                </div>
+                <input class="form-control form-control-lg" id="formFileLg" name="input_file" type="file"> <!--file input -->
+                <div class="input-group input-group-lg">    <!--sheet input -->
+                    <span class="input-group-text">Sheets&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <input class="form-control" id="sheets" placeholder="&quot;1,3_13C&quot;, &quot;2&quot;, &quot;3&quot;" name="sheets" type="text">
                 </div>
                 <button type="submit" class="btn btn-success btn-lg" onclick="openPopup()" disabled>Process Data</button>   <!--process button-->
                 <div class="popup" id="popup">  <!--popup window -->
