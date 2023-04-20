@@ -24,19 +24,6 @@
                 text-align: center;
                 border: 1px solid rgb(243, 246, 243);
             } 
-            .side-text{
-                min-width: 0px;
-                height: 100%;
-                background: #f44336;
-                margin-right: 5px;
-                line-height: 0;
-                color: #fff;
-                display: flex;
-                align-items: center;
-                overflow: hidden;
-                justify-content: center;
-                border-radius: 5px 0 0 5px;
-            }           
             .icon .bi{
                 color:white;
             }
@@ -64,16 +51,16 @@
                 background: #fff;
                 border-radius: 6px;
                 position:fixed;
-                top: 70%;
+                top: 60%;
                 left: 50%;
                 text-align: center;
                 transform: translate(-50%, -50%);
-                padding: 60px 55px 30px 85px;
+                padding: 70px 55px 45px 85px;
                 color: #333;
                 visibility: hidden;
             }
             .popup-header{
-                padding:20px 0px 30px 50px;
+                padding:10px 10px 10px 10px;
                 display: flex; 
                 justify-content: space-between; 
                 align-items: center;
@@ -99,35 +86,37 @@
     </head>
 
     <body>
-        <div class="alert alert-success" role="alert" style="background: #FFBF00; height: 10px;"><A:blank></A:blank></div>
+        <div class="alert alert-success" role="alert" style="background: #FFBF00; height: 10px;"><A:blank></A:blank></div>  <!--top yellow line -->
         <div id="page_header" style="text-align:center; font-size: 3rem; display:block; background: #1e4b87; height: 80px; color: white; font-family: Proxima Nova; position: relative;">
-            <div id="texts" style="display:inline-block">Metabolic Flux Analysis</div>
+            <div id="texts" style="display:inline-block">Metabolic Flux Analysis</div>  <!--top blue line with text -->
         </div>
         
-        <div class="low-opacity-image">
-            <form method="post" action="/index" enctype="multipart/form-data">
+        <div class="low-opacity-image"> <!--background image -->
+            <form method="post" action="/index" id="form" enctype="multipart/form-data">
                 <label for="formFileLg" class="form-label">Please Enter The Following Data:</label>
-                <span class="icon">
-                        <abbr title="help message" style="transition-delay: 0.1s; transition:0.1s;">
-                            <i class="bi bi-question-circle"></i>
-                        </abbr>
+                <span class="icon">     <!-- ? mark icon from Bootstrap icon-->
+                    <abbr title="help message here" style="transition-delay: 0.1s; transition:0.1s;">
+                        <i class="bi bi-question-circle"></i>    
+                    </abbr>
                 </span>
-                <input class="form-control form-control-lg" id="formFileLg" name="input_file" type="file">
-                <div class="input-group input-group-lg">
+                <input class="form-control form-control-lg" id="formFileLg" name="input_file" type="file"> <!--file input -->
+                <div class="input-group input-group-lg">    <!--sheet input -->
                     <span class="input-group-text">Sheets&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     <input class="form-control" id="sheets" placeholder="&quot;1,3_13C&quot;, &quot;2&quot;, &quot;3&quot;" name="sheets" type="text">
                 </div>
-                <div class="input-group input-group-lg">
-                    <button class="btn btn-light dropdown-toggle" id="dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">Model&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                    <input class="form-control" id="dropdown-txt" name="dropdown-txt" type="text">
+                <div class="input-group input-group-lg">    <!--model input -->
+                    <!--dropdown;  the first item "Model"is defalut value and the selected value will be put into the text field next to it -->
+                    <select class="btn btn-light dropdown-toggle" id="dropdown" onchange="getDropdownVal();" name="dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <option selected disabled hidden>Model&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                    </select>
+                    <!--model text filed; since it is readonly, the user has to select a model from the dropdown -->
+                    <input class="form-control" id="dropdownTxt" name="dropdownTxt" placeholder="No Model Chosen" type="text" readonly> 
                 </div>
-                <button type="submit" class="btn btn-success btn-lg" onclick="openPopup()" disabled>Process Data</button>
-                <div class="popup" id="popup">
+                <button type="submit" class="btn btn-success btn-lg" onclick="openPopup()" disabled>Process Data</button>   <!--process button-->
+                <div class="popup" id="popup">  <!--popup window -->
                     <div class="popup-header">
                         <h2>Processing...</h2>
                         <button type="button" class="btn-close" onclick="closePopup()" style="font-size: 1.3rem; font-weight: bold; background-color: #989494;"></button>
@@ -139,11 +128,12 @@
                 </div>
                 <script >
                     const btn = document.querySelector('.btn-success');
+                    var form = document.getElementById("form");
                     var file = document.getElementById("formFileLg");
                     var popup = document.getElementById("popup");
                     var dropdown = document.getElementById("dropdown");
+                    var dropdownTxt = document.getElementById("dropdownTxt");
                     var sheets = document.getElementById("sheets");
-                    var exp = document.getElementById("exp");
                     
                     file.addEventListener("input", () => {
                         // if both file and sheets inputs are entered, then enable the process button.     
@@ -162,6 +152,11 @@
                         } 
                     });
 
+                    function getDropdownVal(){
+                        dropdownTxt.value = dropdown.options[dropdown.selectedIndex].text; // put selected model to the text field.
+                        dropdown.value = dropdown.options[0].text; // set 'Model' instead of the selected value on the dropdown.
+                    }
+
                     function openPopup(){
                         if (popup.classList.length > 1) {
                             popup.classList.remove("close-popup");
@@ -169,8 +164,8 @@
                         if (dropdown.classList.length > 1) {
                             dropdown.classList.remove("dropdown-visible");
                         }
-                        popup.classList.add("open-popup");
-                        dropdown.classList.add("dropdown-hidden");
+                        popup.classList.add("open-popup");          //make popup visible.
+                        dropdown.classList.add("dropdown-hidden");  //make dropdown hidden; not showing on the popup.
                         setTimeout(()=>{dropdown.classList.replace("dropdown-hidden", "dropdown-visible"); popup.classList.replace("open-popup", "close-popup");}, 1500);
                     }
 
@@ -181,12 +176,10 @@
                         if (dropdown.classList.length > 1) {
                             dropdown.classList.remove("dropdown-hidden");
                         }
-                        popup.classList.add("close-popup");
-                        dropdown.classList.add("dropdown-visible");
-                        btn.disabled = true; //disable the process button.
-                        file.value = "";     // reset the file form.
-                        sheets.value = "";   // reset the sheets input
-                        exp.value = "";       // reset the exp input
+                        popup.classList.add("close-popup");         //make popup hidden.
+                        dropdown.classList.add("dropdown-visible"); //since popup is closing, make dropdown visible
+                        form.reset();           // reset the form (file, sheet, and model values).
+                        btn.disabled = true;    //disable the process button.
                     }
                 </script>
             </form>
