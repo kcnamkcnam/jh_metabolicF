@@ -24,10 +24,10 @@
                 text-align: center;
                 border: 1px solid rgb(243, 246, 243);
             } 
-            .icon .bi{
+            .icon .bi {
                 color:white;
             }
-            .icon:hover .bi{
+            .icon:hover .bi {
                 color: black;
             }
             .footer {
@@ -38,7 +38,6 @@
                 display: block;
                 text-align: left;
                 position: relative;
-                
             } 
             .footer_link {
                 padding: 8px 1px 1px 1px;
@@ -59,29 +58,29 @@
                 color: #333;
                 visibility: hidden;
             }
-            .popup-header{
+            .popup-header {
                 padding:10px 10px 10px 10px;
                 display: flex; 
                 justify-content: space-between; 
                 align-items: center;
             }
-            .open-popup{
+            .open-popup {
                 visibility: visible;
             }
-            .close-popup{
+            .close-popup {
                 visibility: hidden;
             }
-            .dropdown-visible{
+            .dropdown-visible {
                 visibility: visible;
             }
-            .dropdown-hidden{
+            .dropdown-hidden {
                 visibility: hidden;
             }
         </style>
 
-        <!-- Bootstrap core CSS -->
+        <!-- Bootstrap core CSS =================================-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-        <!-- Bootstrap icons -->
+        <!-- Bootstrap icons ====================================-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
     </head>
 
@@ -98,7 +97,7 @@
         <div class="low-opacity-image"> 
             <form method="post" action="/index" id="form" enctype="multipart/form-data">
                 <label for="formFileLg" class="form-label">Please Enter The Following Data:</label>
-                <!-- ? mark icon from Bootstrap icon-->
+                <!-- "? mark" icon from Bootstrap icon for help message -->
                 <span class="icon">     
                     <abbr title="help message here" style="transition-delay: 0.1s; transition:0.1s;">
                         <i class="bi bi-question-circle"></i>    
@@ -109,9 +108,9 @@
                     <button class="btn btn-light btn-lg dropdown-toggle" id="dropdown" name="dropdown"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Model&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
                         <ul class="dropdown-menu" id="dropdownMenu">
-                            <li><a class="dropdown-item" href="#">A</a></li>
-                            <li><a class="dropdown-item" href="#">B</a></li>
-                            <li><a class="dropdown-item" href="#">C</a></li>
+                            <li><a class="dropdown-item">A</a></li>
+                            <li><a class="dropdown-item">B</a></li>
+                            <li><a class="dropdown-item">C</a></li>
                         </ul>
                     <!--model text filed; since it is readonly, the user has to select a model from the dropdown -->
                     <input class="form-control" id="dropdownTxt" name="dropdownTxt" placeholder="No model chosen" type="text" readonly> 
@@ -132,6 +131,7 @@
                         <button type="button" class="btn-close" onclick="closePopup()" style="font-size: 1.3rem; font-weight: bold; background-color: #989494;"></button>
                     </div>
                     <p>Please wait for a result file</p>
+                    <!--"loading..." spinner -->
                     <div class="spinner-border text-success" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
@@ -144,7 +144,7 @@
             <a class="footer_link" style="transform: translateX(470%);" href="https://parklab.ucla.edu">CONTACT</a>
         </div>
 
-        <script >
+        <script>
             var btn = document.getElementById("processBtn");
             var form = document.getElementById("form");
             var file = document.getElementById("formFileLg");
@@ -197,12 +197,11 @@
                 }
                 popup.classList.add("close-popup");         //make popup hidden.
                 dropdown.classList.add("dropdown-visible"); //since popup is closing, make dropdown visible
-                form.reset();           // reset the form (file, sheet, and model values).
+                form.reset();           //reset the form (file, sheet, and model values).
                 btn.disabled = true;    //disable the process button.
             }
         </script>
-        <!-- Bootstrap core JavaScript 
-        ================================================== -->
+        <!-- Bootstrap core JavaScrips =================================-->
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     </body>
