@@ -171,9 +171,10 @@
                 } 
             });
             dropdownMenu.addEventListener('click', event => {
-                dropdownTxt.value = event.target.text;
+                if (event.target.text) {
+                    dropdownTxt.value = event.target.text;
+                }
             });
-
             
             function openPopup() {
                 if (popup.classList.length > 1) {
