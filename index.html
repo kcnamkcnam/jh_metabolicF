@@ -108,9 +108,7 @@
                     <button class="btn btn-light btn-lg dropdown-toggle" id="dropdown" name="dropdown"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Model&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
                         <ul class="dropdown-menu" id="dropdownMenu">
-                            <li><a class="dropdown-item">A</a></li>
-                            <li><a class="dropdown-item">B</a></li>
-                            <li><a class="dropdown-item">C</a></li>
+                            <li><a class="dropdown-item">Simple</a></li>
                         </ul>
                     <!--model text filed; since it is readonly, the user has to select a model from the dropdown -->
                     <input class="form-control" id="dropdownTxt" name="dropdownTxt" placeholder="No model chosen" type="text" readonly> 
@@ -197,8 +195,8 @@
                 }
                 popup.classList.add("close-popup");         //make popup hidden.
                 dropdown.classList.add("dropdown-visible"); //since popup is closing, make dropdown visible
-                form.reset();           //reset the form (file, sheet, and model values).
-                btn.disabled = true;    //disable the process button.
+                //form.reset();           //reset the form (file, sheet, and model values).
+                //btn.disabled = true;    //disable the process button.
             }
         </script>
         <!-- Bootstrap core JavaScrips =================================-->
