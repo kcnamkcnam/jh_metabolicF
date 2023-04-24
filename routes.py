@@ -1,9 +1,10 @@
 from flask import request, session, redirect, url_for, make_response, render_template, send_file
 from app import app
-from processing import do_addition, get_mode, process_data, process_input
+from processing import do_addition, get_mode, process_data, process_input, imputeLabelsFromScratched, predictFluxesFromLabels, add_dropdown_menu
 import os
 
 Home_dir = os.getcwd()
+App_dir = os.path.dirname(app.instance_path)
 # disable debug for production
 app.config["DEBUG"] = True
 app.config["SECRET_KEY"] = "aoejfakcjefwejanavvnakdaeofwvoiejqporafda"
@@ -24,23 +25,37 @@ comments = []
 @app.route('/index', methods=["GET", "POST"])
 def index():
     os.chdir(Home_dir)
+    add_dropdown_menu(App_dir + "/app/templates/") # add more models to the dropdown menu
     if request.method == 'POST':
         # get input data (file, sheets, exp)
         input_file = request.files["input_file"]
         sheets_str = request.form.get("sheets")
-        exp_str = request.form.get("exp")
-        tmp = os.path.dirname(app.instance_path)
-        process_dir = tmp + "/app/static/"
+        model_type = request.form.get("dropdownTxt")
+        
+        result = process_input(input_file, sheets_str) ###take the result variable as the input for ML models###
+        labels = imputeLabelsFromScratched(result, model_type)
+        fluxes = predictFluxesFromLabels(labels, model_type)
 
-        result_file = process_input(input_file, sheets_str, exp_str, process_dir)
-        return send_file(result_file, as_attachment=True) # download the result file to the user.
+        #print the resulting fluxes in csv
+        resultString='\n'.join([str(i) for i in fluxes])
+        response = make_response(resultString)
+        response.headers["Content-Disposition"] = "attachment; filename=result.csv"
+        return response
+        # return send_file(file_path, as_attachment=True) # download the result file to the user.
         
-        #input_data = input_file.stream.read().decode("utf-8")
-        #output_data = process_data(input_data)
-        #response = make_response(output_data)
-        #response.headers["Content-Disposition"] = "attachment; filename=result.csv"
-        
-    return render_template("index.html")
+        # return '''
+        # <html>
+        #     <body>
+        #         <p>test</p>
+        #         {result_file}
+        #     </body>
+        # </html>
+        # '''.format(result_file=result)
+    
+    if os.path.exists(App_dir + "/app/templates/index_new.html"):
+      return render_template("index_new.html") # index_new has more models added to the dropdown menu.
+    else:
+      return render_template("index.html")
 
 @app.route("/testcomments", methods=["GET", "POST"])
 def comments_page():
@@ -66,7 +81,7 @@ def adder_page():
         if number1 is not None and number2 is not None:
             result = do_addition(number1, number2)
             return '''
-                <html>  
+                <html>
                     <head>
                         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
                     </head>
