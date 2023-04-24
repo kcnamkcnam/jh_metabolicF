@@ -18,7 +18,6 @@ def get_mode(number_list):
 def add_dropdown_menu(process_dir):
     # this function will read 'model.txt' file and add more models to the dropdown menu list
     # and then it will create a new index file (index_new.html)
-
     model_file = process_dir + "model.txt"
     index_file = process_dir + "index.html"
     new_index_file = process_dir + "index_new.html"
