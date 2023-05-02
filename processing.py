@@ -22,7 +22,7 @@ def add_dropdown_menu(process_dir):
     model_file = process_dir + "model.txt"
     index_file = process_dir + "index.html"
     new_index_file = process_dir + "index_new.html"
-    search_txt = "<option selected disabled>Choose Model"  # dropdown default menu for search
+    search_txt = "<option.*</option>"  # dropdown default menu for regular expression search
     pre_txt = "<option>"
     post_txt = "</option>\n"
     
