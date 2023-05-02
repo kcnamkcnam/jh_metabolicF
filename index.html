@@ -31,12 +31,12 @@
                 color: black;
             }
             .footer {
-                padding: auto;
+                padding: 1px 20px;
                 width: 100%; 
                 line-height: 25px;
                 font-size: 13px;
-                display: block;
-                text-align: left;
+                display: flex;
+                justify-content: space-between;
                 position: relative;
             } 
             .footer_link {
@@ -50,11 +50,11 @@
                 background: #fff;
                 border-radius: 6px;
                 position:fixed;
-                top: 60%;
+                top: 65%;
                 left: 50%;
                 text-align: center;
                 transform: translate(-50%, -50%);
-                padding: 70px 55px 45px 85px;
+                padding: 60px 55px 30px 85px;
                 color: #333;
                 visibility: hidden;
             }
@@ -76,6 +76,9 @@
             .dropdown-hidden {
                 visibility: hidden;
             }
+            h3 {
+                display: inline;
+            }
         </style>
 
         <!-- Bootstrap core CSS =================================-->
@@ -96,32 +99,28 @@
         <!--background image -->
         <div class="low-opacity-image"> 
             <form method="post" action="/index" id="form" enctype="multipart/form-data">
-                <label for="formFileLg" class="form-label">Please Enter The Following Data:</label>
+                <h3>Input Model & Labeling Data: </h3>
                 <!-- "? mark" icon from Bootstrap icon for help message -->
-                <span class="icon">     
-                    <abbr title="help message here" style="transition-delay: 0.1s; transition:0.1s;">
+                <span class="icon" style="font-size:1rem">     
+                    <abbr title="1. Choose one of the pre-trained metabolic models &#10;2. Choose the excel file containing your data &#10;3. Enter the names of the sheets in which your labeling data are located" style="transition-delay: 0.0s; transition:0.0s;">
                         <i class="bi bi-question-circle"></i>    
                     </abbr>
                 </span>
                 <!--model input -->
                 <div class="input-group input-group-lg">    
-                    <button class="btn btn-light btn-lg dropdown-toggle" id="dropdown" name="dropdown"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Model&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-                        <ul class="dropdown-menu" id="dropdownMenu">
-                            <li><a class="dropdown-item">Simple</a></li>
-                        </ul>
-                    <!--model text filed; since it is readonly, the user has to select a model from the dropdown -->
-                    <input class="form-control" id="dropdownTxt" name="dropdownTxt" placeholder="No model chosen" type="text" readonly> 
+                    <select class="btn btn-light dropdown-toggle" id="dropdown" onchange="setDropdownSelected();" name="dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="true">
+                        <option selected disabled>Choose Model&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                    </select> 
                 </div>
                 <!--file input -->
                 <input class="form-control form-control-lg" id="formFileLg" name="input_file" type="file"> 
                 <!--sheet input -->
                 <div class="input-group input-group-lg">    
                     <span class="input-group-text">Sheets&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <input class="form-control" id="sheets" placeholder="&quot;1,3_13C&quot;, &quot;2&quot;, &quot;3&quot;" name="sheets" type="text">
+                    <input class="form-control" id="sheets" placeholder="&quot;1,2_13C&quot;, &quot;Data2&quot;, &quot;3&quot;" name="sheets" type="text">
                 </div>
-                <!--process data button -->
-                <button type="submit" class="btn btn-success btn-lg" id="processBtn" onclick="openPopup()" disabled>Process Data</button>   <!--process button-->
+                <!--output fluxes button -->
+                <button type="submit" class="btn btn-success btn-lg" id="outputBtn" onclick="openPopup()" disabled>Output Fluxes</button>   <!--process button-->
                 <!--popup window -->
                 <div class="popup" id="popup">  
                     <div class="popup-header">
@@ -137,42 +136,47 @@
             </form>
         </div> 
         <div class="footer">
-            <p class="copyright" style="display:inline-block; text-indent: 25px;">© 2023 Regents of the</p>
-            <a class="footer_link" href="http://www.universityofcalifornia.edu/">University of California</a>
-            <a class="footer_link" style="transform: translateX(470%);" href="https://parklab.ucla.edu">CONTACT</a>
+            <p class="copyright" style="display:inline-block;">© 2023 Regents of the <a class="footer_link" href="http://www.universityofcalifornia.edu/">University of California</a></p>
+            <a class="footer_link" href="https://parklab.ucla.edu">Park Lab @ UCLA</a>
         </div>
 
         <script>
-            var btn = document.getElementById("processBtn");
+            var btn = document.getElementById("outputBtn");
             var form = document.getElementById("form");
             var file = document.getElementById("formFileLg");
             var popup = document.getElementById("popup");
             var dropdown = document.getElementById("dropdown");
-            var dropdownMenu = document.getElementById("dropdownMenu");
-            var dropdownTxt = document.getElementById("dropdownTxt");
             var sheets = document.getElementById("sheets");
+            var dropdown_selected = false;
             
             file.addEventListener("input", () => {
-                // if both file and sheets inputs are entered, then enable the process button.     
-                if (file.files.length) {
+                // if both file and model inputs are entered, then enable the output button.     
+                if (file.files.length && dropdown_selected) {
                     btn.disabled = false; 
                 } else {
                     btn.disabled = true;
                 }
             });
             sheets.addEventListener("input", () => {
-                // if both file and sheets inputs are entered, then enable the process button.     
-                if (file.files.length && sheets.value.length) {
+                // if both file and model inputs are entered, then enable the output button.     
+                if (file.files.length && dropdown_selected) {
                     btn.disabled = false; 
                 } else {
                     btn.disabled = true;
                 } 
             });
-            dropdownMenu.addEventListener('click', event => {
-                if (event.target.text) {
-                    dropdownTxt.value = event.target.text;
+
+            function setDropdownSelected(){
+                if (dropdown.selectedIndex) {
+                    dropdown_selected = true;
                 }
-            });
+                // if both file and model inputs are entered, then enable the output button.     
+                if (file.files.length && dropdown_selected) {
+                    btn.disabled = false; 
+                } else {
+                    btn.disabled = true;
+                } 
+            }
             
             function openPopup() {
                 if (popup.classList.length > 1) {
@@ -183,7 +187,7 @@
                 }
                 popup.classList.add("open-popup");          //make popup visible.
                 dropdown.classList.add("dropdown-hidden");  //make dropdown hidden; not showing on the popup.
-                setTimeout(()=>{dropdown.classList.replace("dropdown-hidden", "dropdown-visible"); popup.classList.replace("open-popup", "close-popup");}, 1500);
+                setTimeout(()=>{dropdown.classList.replace("dropdown-hidden", "dropdown-visible"); popup.classList.replace("open-popup", "close-popup");}, 3000);
             }
 
             function closePopup() {
