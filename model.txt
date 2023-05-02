@@ -2,6 +2,5 @@ Upper Glycolysis (UG)
 UG & Pentose Phosphate Pathway (PPP)
 Central Carbon Metabolism (CCM)
 Glycolysis reversibility ([1,2-&sup1;&sup3;</sup>C&#x2082;] & [5-&sup2;H] glucose)
-Simple Test
 
 
