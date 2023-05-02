@@ -1,6 +1,4 @@
-Upper Glycolysis (UG)
-UG & Pentose Phosphate Pathway (PPP)
-Central Carbon Metabolism (CCM)
-Glycolysis reversibility ([1,2-&sup1;&sup3;</sup>C&#x2082;] & [5-&sup2;H] glucose)
-
-
+"Upper Glycolysis (UG)", "UpperGly"
+"UG & Pentose Phosphate Pathway (PPP)", "GlyPPP"
+"Central Carbon Metabolism (CCM)", "MammalianCCM"
+"Glycolysis reversibility ([1,2-&sup1;&sup3;C&#x2082;] & [5-&sup2;H] glucose)", "Gly13C2H"
