@@ -8,6 +8,7 @@ import xml.etree.ElementTree as et
 import ast
 from sklearn.neighbors import KNeighborsRegressor
 import re
+import html
 
 def get_mode(number_list):
     try:
@@ -18,6 +19,7 @@ def get_mode(number_list):
 def add_dropdown_menu(process_dir):
     # this function will read 'model.txt' file and add more models to the dropdown menu list
     # and then it will create a new index file (index_new.html)
+    # return: model_dictionary with model as key and model_type as value
 
     model_file = process_dir + "model.txt"
     index_file = process_dir + "index.html"
@@ -25,6 +27,7 @@ def add_dropdown_menu(process_dir):
     search_txt = "<option.*</option>"  # dropdown default menu for regular expression search
     pre_txt = "<option>"
     post_txt = "</option>\n"
+    model_dic = {"Simple Test":"Simple"} # model dictionary {model:model_type}
     
     if os.path.exists(new_index_file):  # remove existing "index_new.html" file
       os.remove(new_index_file)
@@ -41,18 +44,20 @@ def add_dropdown_menu(process_dir):
             else:
                 if saved_line:
                     outfile.write(saved_line)
-                    for model in infile1: # read model.txt file and add more models to the dropdown menu.
-                        model_add = model.strip() # remove all white spaces.
-                        if (model_add):
+                    for model_str in infile1: # read model.txt file and add more models to the dropdown menu.
+                        model_list = re.findall(r'"(.*?)"', model_str) #convert model_str to list
+                        if (model_list):
                             indentation = ""
                             for char in saved_line: # find out indentation for the dropdown menu item.
                                 if char != '<':
                                     indentation += char
                                 else:
                                     break
-                            outfile.write(indentation + pre_txt + model_add + post_txt)
+                            outfile.write(indentation + pre_txt + model_list[0] + post_txt)
+                            model_dic[html.unescape(model_list[0])] = model_list[1] #add to model dictionary {model:model_type}
                     saved_line = ""
                 outfile.write(line)
+    return model_dic
 
 def d2b(d, n):
     d = np.array(d)
