@@ -25,12 +25,13 @@ comments = []
 @app.route('/index', methods=["GET", "POST"])
 def index():
     os.chdir(Home_dir)
-    add_dropdown_menu(App_dir + "/app/templates/") # add more models to the dropdown menu
+    model_dic = add_dropdown_menu(App_dir + "/app/templates/") # add more models to the dropdown menu
     if request.method == 'POST':
         # get input data (file, sheets, model_type)
         input_file = request.files["input_file"]
         sheets_str = request.form.get("sheets")
-        model_type = request.form.get("dropdown")
+        model = request.form.get("dropdown")
+        model_type = model_dic.get(model) # get model_type from model_dictionaly using model as key.
 
         result = process_input(input_file, sheets_str) ###take the result variable as the input for ML models###
         labels = imputeLabelsFromScratched(result, model_type)
