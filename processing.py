@@ -6,8 +6,8 @@ import pandas as pd
 import numpy as np
 import xml.etree.ElementTree as et
 import ast
-import re
 from sklearn.neighbors import KNeighborsRegressor
+import re
 
 def get_mode(number_list):
     try:
@@ -18,12 +18,13 @@ def get_mode(number_list):
 def add_dropdown_menu(process_dir):
     # this function will read 'model.txt' file and add more models to the dropdown menu list
     # and then it will create a new index file (index_new.html)
+
     model_file = process_dir + "model.txt"
     index_file = process_dir + "index.html"
     new_index_file = process_dir + "index_new.html"
-    search_txt = "class=\"dropdown-item\">"  # dropdown menu for search
-    pre_txt = "<li><a class=\"dropdown-item\">"
-    post_txt = "</a></li>\n"
+    search_txt = "<option selected disabled>Choose Model"  # dropdown default menu for search
+    pre_txt = "<option>"
+    post_txt = "</option>\n"
     
     if os.path.exists(new_index_file):  # remove existing "index_new.html" file
       os.remove(new_index_file)
