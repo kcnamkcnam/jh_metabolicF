@@ -16,125 +16,99 @@ def get_mode(number_list):
     except statistics.StatisticsError as exc:
         return "Error calculating mode: {}".format(exc)
 
-def check_index_mtime(index_profile, index_file):
-    # this function is checking 'index.html' file has been modified or not.
-    # will store the modified time in index_profile file.
-    # returns boolean for need to rebuild the index_new.html file.
+def check_mtime(file, mtime_file):
+    # this function is checking a file has been modified or not by 
+    # comparing the stored mtime (modified time) and calculated mtime.
+    # returns boolean for the file has been modified or not.
 
     modified = False
-    if os.path.exists(index_profile):
-        with open(index_profile, 'r') as idx_profile_infile:
-            stored_mtime = idx_profile_infile.read()
-            mtime = str(os.path.getmtime(index_file)) # convert float to string.
+    if os.path.exists(mtime_file):
+        with open(mtime_file, 'r') as mtime_infile:
+            stored_mtime = mtime_infile.read()
+            mtime = str(os.path.getmtime(file)) # convert float to string.
             if (stored_mtime == mtime):
                modified = False
             else:
                 modified = True
-        idx_profile_infile.close()
-    else: 
+        mtime_infile.close()
+    else: # mtime file does NOT exist, need to create one.
         modified = True
-    if modified: # create index_profile
-        with open(index_profile, 'w') as idx_profile_outfile:
-            idx_profile_outfile.write("%s" %os.path.getmtime(index_file))
-        idx_profile_outfile.close()
+    if modified: # create mtime file
+        with open(mtime_file, 'w') as mtime_outfile:
+            mtime_outfile.write("%s" %os.path.getmtime(file))
+        mtime_outfile.close()
     return  modified
 
-def check_model_modified(model_file, index_file, new_index_file, search_txt):
-    # this function will check to rebuild the existing index_new.html 
-    # by comparing number of model menus and model text for any updates.
-    
-    need_new_index = True # flag for building/rebuilding existing index_new.html 
-
-    if (os.path.exists(model_file) and os.path.exists(new_index_file)): # if there is a index_new.html, check for rebuild or not.
-        with open(index_file, 'r') as idx_infile, open(model_file, 'r') as model_infile, open(new_index_file, 'r') as new_idx_infile:
-            # extract dropdown menu items only from 3 files and put them into 'xxxx_menu_list'
-            idx_content = idx_infile.read()
-            idx_menu_list = re.findall(search_txt, idx_content)
-            new_idx_content = new_idx_infile.read()
-            new_idx_menu_list = re.findall(search_txt, new_idx_content)
-            model_content = model_infile.read()
-            model_menu_list = re.findall(r'"(.*?)"', model_content) #convert string input to list type
-            # since index.html has default dropdown menus only, remove the default menus from the new_idx_menu_list
-            # after removing, the model numbers should match.
-            for i in idx_menu_list:
-                for j in new_idx_menu_list:
-                    if (i in j):
-                        new_idx_menu_list.remove(j)
-            # number of dropdown menu from 'model.txt' file should match with 2 times menu items from 'index_new.html' file; 
-            # otherwise, it will rebuild 'index_new.html' file.
-            if (len(model_menu_list) != 2 * len(new_idx_menu_list)):
-                need_new_index = True
-            else: # model text comparision.
-                # each model menu from model.txt will be compared every model menu from index_new.txt file (the 2nd for loop below).
-                for model_menu in model_menu_list:
-                    #since model menu list from model.txt will have the double the size because it has 'model' and 'model_type'
-                    if (model_menu_list.index(model_menu) % 2 == 1): # skips the model_type
-                        continue
-                    else:
-                        for new_idx_menu in new_idx_menu_list:
-                            if (model_menu in new_idx_menu):
-                                need_new_index = False
-                                break
-                            else: 
-                                need_new_index = True
-                        if need_new_index:
-                            break # the searching model is NOT found, need rebuild index_new file and exit the first loop.
-        idx_infile.close()
-        model_infile.close()
-        new_idx_infile.close() 
-    elif not os.path.exists(model_file):
-        need_new_index = False
-    return need_new_index
-
-def add_dropdown_menu(process_dir):
-    # this function will read 'model.txt' file and add more models to the dropdown menu list
-    # and then it will create a new index file (index_new.html) but before creating a new file 
-    # return: model_dictionary with model as key and model_type as value
-
-    index_profile = process_dir + "indexMtime.txt" # stores modified time for index.html file
-    model_file = process_dir + "model.txt"
-    index_file = process_dir + "index.html"
-    new_index_file = process_dir + "index_new.html"
+def create_index_new_html(model_file, index_file, new_index_file, model_dic):
+    # this function will create 'index_new.html' from 'index.html' with more dropdown menu 
+    # from 'model.txt' will be added.
+    # return a model dictionary {model:model_type}
+     
     search_txt = "<option.*</option>"  # dropdown default menu for regular expression search
     pre_txt = "<option>"
     post_txt = "</option>\n"
+
+    if os.path.exists(new_index_file):  # remove existing "index_new.html" file before creating new one.
+            os.remove(new_index_file)
+    with open(index_file, 'r') as infile, open(model_file, 'r') as infile1, open(new_index_file, 'w') as outfile:
+        saved_line = ""
+        for line in infile:
+            if re.search(search_txt, line): # search for the dropdown menu
+                if saved_line: # both current and previous lines are dropdown menu, write the saved one.
+                    outfile.write(saved_line)
+                saved_line = line  # save the current dropdown menu and get the next one.
+                continue
+            else:
+                if saved_line:
+                    outfile.write(saved_line)
+                    for model_str in infile1: # read model.txt file and add more models to the dropdown menu.
+                        model_list = re.findall(r'"(.*?)"', model_str) #convert model_str to list
+                        if (model_list):
+                            indentation = ""
+                            for char in saved_line: # find out indentation for the dropdown menu item.
+                                if char != '<':
+                                    indentation += char
+                                else:
+                                    break
+                            outfile.write(indentation + pre_txt + model_list[0] + post_txt)
+                            model_dic[html.unescape(model_list[0])] = model_list[1] #add to model dictionary {model:model_type}
+                    saved_line = ""
+                outfile.write(line) 
+    infile.close()
+    infile1.close()
+    outfile.close()
+    return model_dic
+
+def add_dropdown_menu(process_dir):
+    # this function will read 'model.txt' file and add more models to the dropdown menu list
+    # and then it will create 'index_new.html' but before creating a new one, it will check 
+    # 'model.txt' and 'indel.html' files have been modified or not. 
+    # return: model_dictionary with model as key and model_type as value
+
+    indexMtime_file = process_dir + "indexMtime.txt" # stores modified time for 'index.html' file
+    modelMtime_file = process_dir + "modelMtime.txt" # stores modified time for 'model.txt' file
+    model_file = process_dir + "model.txt"
+    index_file = process_dir + "index.html"
+    new_index_file = process_dir + "index_new.html"
     model_dic = {"Simple Test":"Simple"} # model dictionary {model:model_type}
 
-    if (check_index_mtime(index_profile, index_file) or check_model_modified(model_file, index_file, new_index_file, search_txt)):
-        # building a new index.html file.
-        if os.path.exists(new_index_file):  # remove existing "index_new.html" file before creating new one.
+    if not os.path.exists(model_file): # if model.txt file does NOT exist, remove the existing 'index_new.html' file
+        if os.path.exists(new_index_file):  
             os.remove(new_index_file)
-        with open(index_file, 'r') as infile, open(model_file, 'r') as infile1, open(new_index_file, 'w') as outfile:
-            saved_line = ""
-            for line in infile:
-                if re.search(search_txt, line): # search for the dropdown menu
-                    if saved_line: # both current and previous lines are dropdown menu, write the saved one.
-                        outfile.write(saved_line)
-                    saved_line = line  # save the current dropdown menu and get the next one.
-                    continue
-                else:
-                    if saved_line:
-                        outfile.write(saved_line)
-                        for model_str in infile1: # read model.txt file and add more models to the dropdown menu.
-                            model_list = re.findall(r'"(.*?)"', model_str) #convert model_str to list
-                            if (model_list):
-                                indentation = ""
-                                for char in saved_line: # find out indentation for the dropdown menu item.
-                                    if char != '<':
-                                        indentation += char
-                                    else:
-                                        break
-                                outfile.write(indentation + pre_txt + model_list[0] + post_txt)
-                                model_dic[html.unescape(model_list[0])] = model_list[1] #add to model dictionary {model:model_type}
-                        saved_line = ""
-                    outfile.write(line) 
-        infile.close()
-        infile1.close()
-        outfile.close()               
-    elif not os.path.exists(model_file): # if model.txt file is NOT exist, remove the existing index_new.html file
-        if os.path.exists(new_index_file):  # remove existing "index_new.html" file before creating new one.
-            os.remove(new_index_file)
-    return model_dic
+        return model_dic
+    is_idx_modified = check_mtime(index_file, indexMtime_file) # checking 'index.html' has been modified or not
+    is_model_modified = check_mtime(model_file, modelMtime_file) # checking 'model.txt' has been modified or not
+    if ( is_idx_modified or is_model_modified or (not os.path.exists(new_index_file))):
+        #  need to rebuild index_new.html file.
+        return create_index_new_html(model_file, index_file, new_index_file, model_dic)
+    else: # no files are modified, need to return model dictionary with all models. 
+        with open(model_file, 'r') as model_infile:
+            for model_str in model_infile: # read model.txt file.
+                model_list = re.findall(r'"(.*?)"', model_str) #convert model_str to list
+                if (model_list):
+                    model_dic[html.unescape(model_list[0])] = model_list[1] #add to model dictionary {model:model_type}
+        model_infile.close()
+        return model_dic            
     
 def d2b(d, n):
     d = np.array(d)
