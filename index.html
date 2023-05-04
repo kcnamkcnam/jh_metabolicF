@@ -152,16 +152,16 @@
             var dropdown_selected = false;
             
             file.addEventListener("input", () => {
-                // if both file and model inputs are entered, then enable the output button.     
-                if (file.files.length && dropdown_selected) {
+                // if all file, model dropdown, and sheets inputs are entered, then enable the output button.     
+                if (file.files.length && dropdown_selected && sheets.value.length) {
                     btn.disabled = false; 
                 } else {
                     btn.disabled = true;
                 }
             });
             sheets.addEventListener("input", () => {
-                // if both file and model inputs are entered, then enable the output button.     
-                if (file.files.length && dropdown_selected) {
+                // if all file, model dropdown, and sheets inputs are entered, then enable the output button.     
+                if (file.files.length && dropdown_selected && sheets.value.length) {
                     btn.disabled = false; 
                 } else {
                     btn.disabled = true;
@@ -172,8 +172,8 @@
                 if (dropdown.selectedIndex) {
                     dropdown_selected = true;
                 }
-                // if both file and model inputs are entered, then enable the output button.     
-                if (file.files.length && dropdown_selected) {
+                // if all file, model dropdown, and sheets inputs are entered, then enable the output button.  
+                if (file.files.length && dropdown_selected && sheets.value.length) {
                     btn.disabled = false; 
                 } else {
                     btn.disabled = true;
