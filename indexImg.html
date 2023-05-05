@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ML-Flux</title>
+        <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Metabolic Flux Analysis">
+        <meta name="author" content="Jun Park, Rachel Ki, Richard Law">
+        
+        <style>
+            .low-opacity-image {
+                width: 100%;
+                height: 70vh; 
+                align-items: center;
+                font-size: 2rem;
+                background-image: linear-gradient(45deg, rgba(255, 0, 0, 0.5), rgba(255, 166, 0, 0.5), rgba(0, 0, 255, 0.44)), url("/static/img0.jpg");
+                background-size: cover;
+                background-position: center;
+                display: flex;
+                place-content: center;
+                color: white;
+                text-align: center;
+                border: 1px solid rgb(243, 246, 243);
+            } 
+            .icon .bi {
+                color:white;
+            }
+            .icon:hover .bi {
+                color: black;
+            }
+            .footer {
+                padding: 1px 20px;
+                width: 100%; 
+                line-height: 25px;
+                font-size: 13px;
+                display: flex;
+                justify-content: space-between;
+                position: relative;
+            } 
+            .footer_link {
+                padding: 8px 1px 1px 1px;
+                display: inline-flex;
+                color: #2774ae;
+                text-decoration: none; 
+                font-weight: bold;
+            }  
+            .popup {
+                background: #fff;
+                border-radius: 6px;
+                position:fixed;
+                top: 65%;
+                left: 50%;
+                text-align: center;
+                transform: translate(-50%, -50%);
+                padding: 60px 55px 30px 85px;
+                color: #333;
+                visibility: hidden;
+            }
+            .popup-header {
+                padding:10px 10px 10px 10px;
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center;
+            }
+            .open-popup {
+                visibility: visible;
+            }
+            .close-popup {
+                visibility: hidden;
+            }
+            .dropdown-visible {
+                visibility: visible;
+            }
+            .dropdown-hidden {
+                visibility: hidden;
+            }
+            h3 {
+                display: inline;
+            }
+        </style>
+
+        <!-- Bootstrap core CSS =================================-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+        <!-- Bootstrap icons ====================================-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+    </head>
+
+    <body>
+        <!--top yellow line -->
+        <div class="alert alert-success" role="alert" style="background: #FFBF00; height: 10px;"><A:blank></A:blank></div>  
+        
+        <!--top blue line with text -->
+        <div id="page_header" style="text-align:center; font-size: 3rem; display:block; background: #1e4b87; height: 80px; color: white; font-family: Proxima Nova; position: relative;">
+            <div id="texts" style="display:inline-block">Metabolic Flux Analysis</div>  
+        </div>
+        
+        <!--background image -->
+        <div class="low-opacity-image" id="img"> 
+            <form method="post" action="/index" id="form" enctype="multipart/form-data">
+                <h3>Input Model & Labeling Data: </h3>
+                <!-- "? mark" icon from Bootstrap icon for help message -->
+                <span class="icon" style="font-size:1rem">     
+                    <abbr title="1. Choose one of the pre-trained metabolic models &#10;2. Choose the excel file containing your data &#10;3. Enter the names of the sheets in which your labeling data are located" style="transition-delay: 0.0s; transition:0.0s;">
+                        <i class="bi bi-question-circle"></i>    
+                    </abbr>
+                </span>
+                <!--model dropdown input -->
+                <div class="input-group input-group-lg">    
+                    <select class="btn btn-light dropdown-toggle" id="dropdown" onchange="setDropdownSelected();" name="dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="true">
+                        <!-- please don't change the following space chars and don't add return line-->
+                        <option selected disabled>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Choose Model&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                        <option>Simple Test</option>
+                    </select> 
+                </div>
+                <!--file input -->
+                <input class="form-control form-control-lg" id="formFileLg" name="input_file" type="file"> 
+                <!--sheet input -->
+                <div class="input-group input-group-lg">    
+                    <span class="input-group-text">Sheets&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <input class="form-control" id="sheets" placeholder="&quot;1,2_13C&quot;, &quot;Data2&quot;, &quot;3&quot;" name="sheets" type="text">
+                </div>
+                <!--output fluxes button -->
+                <button type="submit" class="btn btn-success btn-lg" id="outputBtn" onclick="openPopup()" disabled>Output Fluxes</button>   <!--process button-->
+                <!--popup window -->
+                <div class="popup" id="popup">  
+                    <div class="popup-header">
+                        <h2>Processing...</h2>
+                        <button type="button" class="btn-close" onclick="closePopup()" style="font-size: 1.3rem; font-weight: bold; background-color: #989494;"></button>
+                    </div>
+                    <p>Please wait for a result file</p>
+                    <!--"loading..." spinner -->
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </form>
+        </div> 
+        <div class="footer">
+            <p class="copyright" style="display:inline-block;">© 2023 Regents of the <a class="footer_link" href="http://www.universityofcalifornia.edu/">University of California</a></p>
+            <a class="footer_link" href="https://parklab.ucla.edu">Park Lab @ UCLA</a>
+        </div>
+
+        <script>
+            var btn = document.getElementById("outputBtn");
+            var form = document.getElementById("form");
+            var file = document.getElementById("formFileLg");
+            var popup = document.getElementById("popup");
+            var dropdown = document.getElementById("dropdown");
+            var sheets = document.getElementById("sheets");
+            var dropdown_selected = false;
+            var x = -1;
+            var images = ["/static/img0.jpg", "/static/img1.jpg", "/static/img2.jpg", "/static/img3.jpg", "/static/img4.jpg",
+                             "/static/img5.jpg", "/static/img6.jpg", "/static/img7.jpg", "/static/img8.jpg", "/static/img9.jpg",
+                             "/static/img11.jpg", "/static/img12.jpg", "/static/img13.jpg", "/static/img14.jpg", "/static/img15.jpg"];
+            
+            function changeImage() {
+                x = (x === images.length - 1) ? 0 : x + 1;
+                //x = Math.floor( Math.random() * 11);
+                document.getElementById("img").style.backgroundImage = 'linear-gradient(45deg, rgba(255, 0, 0, 0.5), rgba(255, 166, 0, 0.5), rgba(0, 0, 255, 0.44)), url("' + images[x] + '")';
+                //document.getElementById("img").style.backgroundImage = 'url("' + images[x] + '")';
+            }
+
+            window.onload = function () {
+                setInterval(changeImage, 2000);
+            }
+            
+            file.addEventListener("input", () => {
+                // if all file, model dropdown, and sheets inputs are entered, then enable the output button.     
+                if (file.files.length && dropdown_selected && sheets.value.length) {
+                    btn.disabled = false; 
+                } else {
+                    btn.disabled = true;
+                }
+            });
+            sheets.addEventListener("input", () => {
+                // if all file, model dropdown, and sheets inputs are entered, then enable the output button.     
+                if (file.files.length && dropdown_selected && sheets.value.length) {
+                    btn.disabled = false; 
+                } else {
+                    btn.disabled = true;
+                } 
+            });
+
+            function setDropdownSelected(){
+                if (dropdown.selectedIndex) {
+                    dropdown_selected = true;
+                }
+                // if all file, model dropdown, and sheets inputs are entered, then enable the output button.  
+                if (file.files.length && dropdown_selected && sheets.value.length) {
+                    btn.disabled = false; 
+                } else {
+                    btn.disabled = true;
+                } 
+            }
+            
+            function openPopup() {
+                if (popup.classList.length > 1) {
+                    popup.classList.remove("close-popup");
+                }
+                if (dropdown.classList.length > 1) {
+                    dropdown.classList.remove("dropdown-visible");
+                }
+                popup.classList.add("open-popup");          //make popup visible.
+                dropdown.classList.add("dropdown-hidden");  //make dropdown hidden; not showing on the popup.
+                setTimeout(()=>{dropdown.classList.replace("dropdown-hidden", "dropdown-visible"); popup.classList.replace("open-popup", "close-popup");}, 3000);
+            }
+
+            function closePopup() {
+                if (popup.classList.length > 1) {
+                    popup.classList.remove("open-popup");
+                } 
+                if (dropdown.classList.length > 1) {
+                    dropdown.classList.remove("dropdown-hidden");
+                }
+                popup.classList.add("close-popup");         //make popup hidden.
+                dropdown.classList.add("dropdown-visible"); //since popup is closing, make dropdown visible
+                //form.reset();           //reset the form (file, sheet, and model values).
+                //btn.disabled = true;    //disable the process button.
+            }
+        </script>
+        <!-- Bootstrap core JavaScrips =================================-->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    </body>
+</html>
