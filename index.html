@@ -15,7 +15,7 @@
                 height: 70vh; 
                 align-items: center;
                 font-size: 2rem;
-                background-image: linear-gradient(45deg, rgba(255, 0, 0, 0.5), rgba(255, 166, 0, 0.5), rgba(0, 0, 255, 0.44)), url("/static/bioengineering.jpg");
+                background-image: linear-gradient(45deg, rgba(255, 0, 0, 0.5), rgba(255, 166, 0, 0.5), rgba(0, 0, 255, 0.44)), url("/static/img0.jpg");
                 background-size: cover;
                 background-position: center;
                 display: flex;
@@ -87,7 +87,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
     </head>
 
-    <body>
+    <body onload="getRandomImage()">
         <!--top yellow line -->
         <div class="alert alert-success" role="alert" style="background: #FFBF00; height: 10px;"><A:blank></A:blank></div>  
         
@@ -97,7 +97,7 @@
         </div>
         
         <!--background image -->
-        <div class="low-opacity-image"> 
+        <div class="low-opacity-image" id="img"> 
             <form method="post" action="/index" id="form" enctype="multipart/form-data">
                 <h3>Input Model & Labeling Data: </h3>
                 <!-- "? mark" icon from Bootstrap icon for help message -->
@@ -150,7 +150,13 @@
             var dropdown = document.getElementById("dropdown");
             var sheets = document.getElementById("sheets");
             var dropdown_selected = false;
+            var images = ["/static/img0.jpg", "/static/img1.jpg", "/static/img2.jpg", "/static/img3.jpg", "/static/img4.jpg"];
             
+            function getRandomImage() {
+                var x = Math.floor( Math.random() * images.length );
+                document.getElementById("img").style.backgroundImage = 'linear-gradient(45deg, rgba(255, 0, 0, 0.5), rgba(255, 166, 0, 0.5), rgba(0, 0, 255, 0.44)), url("' + images[x] + '")';
+            }
+
             file.addEventListener("input", () => {
                 // if all file, model dropdown, and sheets inputs are entered, then enable the output button.     
                 if (file.files.length && dropdown_selected && sheets.value.length) {
