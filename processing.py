@@ -17,7 +17,7 @@ def get_mode(number_list):
         return "Error calculating mode: {}".format(exc)
 
 def check_mtime(file, mtime_file):
-    # this function is checking a file has been modified or not by 
+    # this function is checking a file has been modified or not by
     # comparing the stored mtime (modified time) and calculated mtime.
     # returns boolean for the file has been modified or not.
 
@@ -40,7 +40,7 @@ def check_mtime(file, mtime_file):
     return  modified
 
 def create_index_new_html(model_file, index_file, new_index_file, model_dic):
-    # this function will create 'index_new.html' from 'index.html' with more dropdown menu 
+    # this function will create 'index_new.html' from 'index.html' with more dropdown menu
     # from 'model.txt' will be added.
     # return a model dictionary {model:model_type}
      
@@ -73,7 +73,7 @@ def create_index_new_html(model_file, index_file, new_index_file, model_dic):
                             outfile.write(indentation + pre_txt + model_list[0] + post_txt)
                             model_dic[html.unescape(model_list[0])] = model_list[1] #add to model dictionary {model:model_type}
                     saved_line = ""
-                outfile.write(line) 
+                outfile.write(line)
     infile.close()
     infile1.close()
     outfile.close()
@@ -81,8 +81,8 @@ def create_index_new_html(model_file, index_file, new_index_file, model_dic):
 
 def add_dropdown_menu(process_dir):
     # this function will read 'model.txt' file and add more models to the dropdown menu list
-    # and then it will create 'index_new.html' but before creating a new one, it will check 
-    # 'model.txt' and 'indel.html' files have been modified or not. 
+    # and then it will create 'index_new.html' but before creating a new one, it will check
+    # 'model.txt' and 'indel.html' files have been modified or not.
     # return: model_dictionary with model as key and model_type as value
 
     indexMtime_file = process_dir + "indexMtime.txt" # stores modified time for 'index.html' file
@@ -93,7 +93,7 @@ def add_dropdown_menu(process_dir):
     model_dic = {"Simple Test":"Simple"} # model dictionary {model:model_type}
 
     if not os.path.exists(model_file): # if model.txt file does NOT exist, remove the existing 'index_new.html' file
-        if os.path.exists(new_index_file):  
+        if os.path.exists(new_index_file):
             os.remove(new_index_file)
         return model_dic
     is_idx_modified = check_mtime(index_file, indexMtime_file) # checking 'index.html' has been modified or not
@@ -101,14 +101,14 @@ def add_dropdown_menu(process_dir):
     if ( is_idx_modified or is_model_modified or (not os.path.exists(new_index_file))):
         #  need to rebuild index_new.html file.
         return create_index_new_html(model_file, index_file, new_index_file, model_dic)
-    else: # no files are modified, need to return model dictionary with all models. 
+    else: # no files are modified, need to return model dictionary with all models.
         with open(model_file, 'r') as model_infile:
             for model_str in model_infile: # read model.txt file.
                 model_list = re.findall(r'"(.*?)"', model_str) #convert model_str to list
                 if (model_list):
                     model_dic[html.unescape(model_list[0])] = model_list[1] #add to model dictionary {model:model_type}
         model_infile.close()
-        return model_dic            
+        return model_dic
     
 def d2b(d, n):
     d = np.array(d)
@@ -123,7 +123,7 @@ def d2b(d, n):
     b = np.fliplr(b)
     return b
 
-def process_input(input_file, sheets_str):
+def process_input(input_file, sheets_str, modelType):
     home_dir = os.getcwd()
     process_dir = os.getcwd() + "/app/jupyter/"
 
@@ -131,8 +131,23 @@ def process_input(input_file, sheets_str):
     input_file.save(process_dir + input_file.filename) #upload user input file.
     xlsname = input_file.filename #user input file name
 
-    xmlname='simple1.xml' #specify this for each model
-    lmid=4 #specify this for each model
+    if modelType == 'Simple':
+        xmlname='simple1.xml'
+        lmid=4
+    elif modelType == 'UpperGly':
+        xmlname='simple1.xml'
+        lmid=4
+    elif modelType == 'Gly13C2H':
+        xmlname='simple1.xml'
+        lmid=4
+    elif modelType == 'GlyPPP':
+        xmlname='simple1.xml'
+        lmid=4
+    elif modelType == 'MammalianCCM':
+        xmlname='simple1.xml'
+        lmid=4
+    else: raise ValueError("Unexpected model name. Accepted models are 'Simple','UpperGly','Gly13C2H','GlyPPP', or 'MammalianCCM'")
+
     tracer = "input" #fixed variable for the excel sheet where tracers are
 
     #when the user enters "None" or Nothing in sheets field, set the default value "None"
@@ -191,6 +206,7 @@ def process_input(input_file, sheets_str):
     
     return vec
     
+
 def process_data(input_data):
     result = ""
     for line in input_data.splitlines():
@@ -246,7 +262,7 @@ def imputeLabelsFromScratched(scratchedLabelSet,modelType):
 
     label_all = np.zeros(n_label)
 
-    label_all[known_list] = scratchedLabelSet[known_list] 
+    label_all[known_list] = scratchedLabelSet[known_list]
     label_all[missing_list] = pred
     fullLabelSet = label_all.reshape(1,n_label)
 
@@ -319,7 +335,7 @@ def predictFluxesFromLabels(fullLabelSet,modelType):
     loadedModel = model_from_json(loaded_model_json)
 
     # Load weights into model
-    loadedModel.load_weights(modelWeightsFiles) 
+    loadedModel.load_weights(modelWeightsFiles)
 
     # Compile model and optimizer
     loadedModel.compile(optimizer='adam', loss='mae', metrics=[None])
