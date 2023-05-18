@@ -33,12 +33,18 @@ def index():
         model = request.form.get("dropdown")
         model_type = model_dic.get(model) # get model_type from model_dictionaly using model as key.
 
-        result = process_input(input_file, sheets_str) ###take the result variable as the input for ML models###
+        result = process_input(input_file, sheets_str, model_type) ###take the result variable as the input for ML models###
         labels = imputeLabelsFromScratched(result, model_type)
-        fluxes = predictFluxesFromLabels(labels, model_type)
+        fluxes = predictFluxesFromLabels(labels, model_type) #returns 4 variables; fluxes[0], fluxes[1], ...
 
         #print the resulting fluxes in csv
-        resultString='\n'.join([str(i) for i in fluxes])
+        t1=' '.join([str(i) for i in fluxes[3]]) #4th variable: fullList string separated by a space.
+        full_list= t1.split()   # convert string to list type
+        t2=' '.join([str(j) for j in fluxes[2]]) #3rd variable: fullFluxes string separated by a space.
+        full_fluxes=[j.strip('[]') for j in t2.split()] # remove brackets and convert to list type.
+        resultString="Reactions,Fluxes\n"   #print 'column name' at the first line.
+        for i in range(0, len(full_list)):
+            resultString +=full_list[i] + ","  + full_fluxes[i] + '\n' #print list and flux separated by a comma  
         response = make_response(resultString)
         response.headers["Content-Disposition"] = "attachment; filename=result.csv"
         return response
