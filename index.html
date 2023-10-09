@@ -12,7 +12,7 @@
         <style>
             .low-opacity-image {
                 width: 100%;
-                height: 70vh; 
+                height: 85vh; 
                 align-items: center;
                 font-size: 2rem;
                 background-image: linear-gradient(45deg, rgba(255, 0, 0, 0.5), rgba(255, 166, 0, 0.5), rgba(0, 0, 255, 0.44)), url("/static/img0.jpg");
@@ -23,12 +23,46 @@
                 color: white;
                 text-align: center;
                 border: 1px solid rgb(243, 246, 243);
-            } 
-            .icon .bi {
+            }
+            .bi {
                 color:white;
             }
-            .icon:hover .bi {
+            .bi:hover {
                 color: black;
+            }
+            [data-title]:hover::after {
+                opacity: 1;
+                position: absolute;
+                visibility: visible;
+                transition: all 0.1s ease 0.1s;
+            }
+            [data-title]::after {
+                content: attr(data-title);
+                visibility: hidden;
+                display: inline-block;
+                position: absolute;
+                min-width:max-content;
+                box-sizing:border-box;
+                box-shadow:0 10px 18px rgba(0,0,0,0.5);
+                padding: 1px 1px 1px 8px;
+                transition: all 0.1s ease 0.1s;
+                text-align: left;
+                color: black;
+                background-color: white;
+                font-size: 75%;
+                white-space: pre-line;
+                top: 75%;
+                z-index: 99999;
+                opacity: 0;
+            }
+            [data-title] {
+                position: relative;
+            }
+            .alert {
+                margin-bottom: 1px;
+                height: 10px;
+                line-height: 10px;
+                padding: 0px 15px;
             }
             .footer {
                 padding: 1px 20px;
@@ -50,7 +84,7 @@
                 background: #fff;
                 border-radius: 6px;
                 position:fixed;
-                top: 65%;
+                top: 60%;
                 left: 50%;
                 text-align: center;
                 transform: translate(-50%, -50%);
@@ -89,21 +123,38 @@
 
     <body onload="getRandomImage()">
         <!--top yellow line -->
-        <div class="alert alert-success" role="alert" style="background: #FFBF00; height: 10px;"><A:blank></A:blank></div>  
-        
-        <!--top blue line with text -->
-        <div id="page_header" style="text-align:center; font-size: 3rem; display:block; background: #1e4b87; height: 80px; color: white; font-family: Proxima Nova; position: relative;">
-            <div id="texts" style="display:inline-block">Metabolic Flux Analysis</div>  
+        <!--<div class="alert alert-success" role="alert" style="background: #FFBF00;"><A:blank></A:blank></div>-->
+        <div style="text-align:center; font-size: 3rem; display:block; background: #FFD100; height: 15px; color: white; font-family: Proxima Nova; position: relative;">
         </div>
-        
+        <!--top blue line with text -->
+        <div style="text-align:center; font-size: 3rem; display:block; background: #2774AE; height: 15px; color: white; font-family: Proxima Nova; position: relative;">
+            <!--<div id="texts" style="display:inline-block">Metabolic Flux Analysis</div>-->
+        </div>
         <!--background image -->
         <div class="low-opacity-image" id="img"> 
+            <div style="position: absolute; top: 4%; max-height: 132px; overflow: hidden;"> <!--max-height will cut MLFlux img bottom -->
+                <a href="javascript:window.location.reload();">
+                    <img src="/static/MLFlux_Logo2.png" height="165" alt="Metabolic Flux Analysis" title="Metabolic Flux Analysis by Machine Learning">
+                </a>
+            </div>
             <form method="post" action="/index" id="form" enctype="multipart/form-data">
                 <h3>Input Model & Labeling Data: </h3>
                 <!-- "? mark" icon from Bootstrap icon for help message -->
-                <span class="icon" style="font-size:1rem">     
-                    <abbr title="1. Choose one of the pre-trained metabolic models &#10;2. Choose the excel file containing your data &#10;3. Enter the names of the sheets in which your labeling data are located" style="transition-delay: 0.0s; transition:0.0s;">
+                <span class="icon" style="font-size:1rem;">     
+                    <abbr data-title="1. Choose one of the pre-trained metabolic models &#10;2. Choose the excel file containing your data &#10;3. Enter the names of the sheets in which your labeling data are located">
                         <i class="bi bi-question-circle"></i>    
+                    </abbr>
+                </span>
+                <!-- "excel" icon from Bootstrap icon -->
+                <span class="icon" style="font-size:1rem;">
+                    <abbr data-title="It will download ML-Flux_Input_Template.xlsx file">
+                        <a style="text-decoration: none;" href="/static/ML-Flux_Input_Template.xlsx"><i class="bi bi-file-earmark-excel"></i></a>  
+                    </abbr>
+                </span>
+                <!-- "pdf" icon from Bootstrap icon -->
+                <span class="icon" style="font-size:1rem;">
+                    <abbr data-title="It will open ML-Flux_Manual.pdf file">
+                        <a style="text-decoration: none;" href="/static/ML-Flux Manual.pdf"><i class="bi bi-filetype-pdf"></i></a>   
                     </abbr>
                 </span>
                 <!--model dropdown input -->
@@ -136,7 +187,7 @@
                     </div>
                 </div>
             </form>
-        </div> 
+        </div>
         <div class="footer">
             <p class="copyright" style="display:inline-block;">© 2023 Regents of the <a class="footer_link" href="http://www.universityofcalifornia.edu/">University of California</a></p>
             <a class="footer_link" href="https://parklab.ucla.edu">Park Lab @ UCLA</a>
@@ -150,8 +201,12 @@
             var dropdown = document.getElementById("dropdown");
             var sheets = document.getElementById("sheets");
             var dropdown_selected = false;
-            var images = ["/static/img0.jpg", "/static/img1.jpg", "/static/img2.jpg", "/static/img3.jpg", "/static/img4.jpg"];
+            var images = ["/static/img0.jpg", "/static/img1.jpg", "/static/img2.jpg", "/static/img3.jpg", "/static/img4.jpg", "/static/img5.jpg", "/static/img6.jpg", "/static/img7.jpg", "/static/img8.jpg", "/static/img9.jpg", "/static/img10.jpg", "/static/img11.jpg", "/static/img12.jpg", "/static/img13.jpg", "/static/img14.jpg", "/static/img15.jpg", "/static/img16.jpg", "/static/img17.jpg", "/static/img18.jpg", "/static/img19.jpg", "/static/img20.jpg", "/static/img21.jpg", "/static/img22.jpg", "/static/img23.jpg", "/static/img24.jpg", "/static/img25.jpg", "/static/img26.jpg", "/static/img27.jpg", "/static/img28.jpg", "/static/img29.jpg", "/static/img30.jpg", "/static/img31.jpg", "/static/img32.jpg", "/static/img33.jpg", "/static/img34.jpg", "/static/img35.jpg", "/static/img36.jpg", "/static/img37.jpg", "/static/img38.jpg", "/static/img39.jpg", "/static/img40.jpg", "/static/img41.jpg", "/static/img42.jpg", "/static/img43.jpg", "/static/img44.jpg", "/static/img45.jpg", "/static/img46.jpg", "/static/img47.jpg", "/static/img48.jpg", "/static/img49.jpg", "/static/img50.jpg", "/static/img51.jpg", "/static/img52.jpg", "/static/img53.jpg", "/static/img54.jpg", "/static/img55.jpg", "/static/img56.jpg", "/static/img57.jpg", "/static/img58.jpg", "/static/img59.jpg", "/static/img60.jpg", "/static/img61.jpg", "/static/img62.jpg", "/static/img63.jpg", "/static/img64.jpg", "/static/img65.jpg", "/static/img66.jpg", "/static/img67.jpg", "/static/img68.jpg", "/static/img69.jpg", "/static/img70.jpg", "/static/img71.jpg"];
             
+            if(performance.navigation.type == 2){ // reload/refresh when the user clicks the 'back' btn from internal error crash.
+                location.reload(true);
+            }
+
             function getRandomImage() {
                 var x = Math.floor( Math.random() * images.length );
                 document.getElementById("img").style.backgroundImage = 'linear-gradient(45deg, rgba(255, 0, 0, 0.5), rgba(255, 166, 0, 0.5), rgba(0, 0, 255, 0.44)), url("' + images[x] + '")';
@@ -195,7 +250,7 @@
                 }
                 popup.classList.add("open-popup");          //make popup visible.
                 dropdown.classList.add("dropdown-hidden");  //make dropdown hidden; not showing on the popup.
-                setTimeout(()=>{dropdown.classList.replace("dropdown-hidden", "dropdown-visible"); popup.classList.replace("open-popup", "close-popup");}, 3000);
+                setTimeout(()=>{dropdown.classList.replace("dropdown-hidden", "dropdown-visible"); popup.classList.replace("open-popup", "close-popup");}, 5000);
             }
 
             function closePopup() {
