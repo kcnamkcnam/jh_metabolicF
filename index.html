@@ -12,7 +12,7 @@
         <style>
             .low-opacity-image {
                 width: 100%;
-                height: 85vh; 
+                height: 88vh; 
                 align-items: center;
                 font-size: 2rem;
                 background-image: linear-gradient(45deg, rgba(255, 0, 0, 0.5), rgba(255, 166, 0, 0.5), rgba(0, 0, 255, 0.44)), url("/static/img0.jpg");
@@ -132,7 +132,7 @@
         </div>
         <!--background image -->
         <div class="low-opacity-image" id="img"> 
-            <div style="position: absolute; top: 4%; max-height: 132px; overflow: hidden;"> <!--max-height will cut MLFlux img bottom -->
+            <div style="position: absolute; top: 5%; max-height: 132px; overflow: hidden;"> <!--max-height will cut MLFlux img bottom -->
                 <a href="javascript:window.location.reload();">
                     <img src="/static/MLFlux_Logo2.png" height="165" alt="Metabolic Flux Analysis" title="Metabolic Flux Analysis by Machine Learning">
                 </a>
@@ -145,16 +145,22 @@
                         <i class="bi bi-question-circle"></i>    
                     </abbr>
                 </span>
+                <!-- "pdf" icon from Bootstrap icon -->
+                <span class="icon" style="font-size:1rem;">
+                    <abbr data-title="ML-Flux Manual">
+                        <a style="text-decoration: none;" href="/static/ML-FluxManual.pdf"><i class="bi bi-filetype-pdf"></i></a>   
+                    </abbr>
+                </span>
                 <!-- "excel" icon from Bootstrap icon -->
                 <span class="icon" style="font-size:1rem;">
-                    <abbr data-title="It will download ML-Flux_Input_Template.xlsx file">
+                    <abbr data-title="Blank Template Sheet">
                         <a style="text-decoration: none;" href="/static/ML-Flux_Input_Template.xlsx"><i class="bi bi-file-earmark-excel"></i></a>  
                     </abbr>
                 </span>
-                <!-- "pdf" icon from Bootstrap icon -->
+                <!-- "excel" icon from Bootstrap icon -->
                 <span class="icon" style="font-size:1rem;">
-                    <abbr data-title="It will open ML-Flux_Manual.pdf file">
-                        <a style="text-decoration: none;" href="/static/ML-Flux Manual.pdf"><i class="bi bi-filetype-pdf"></i></a>   
+                    <abbr data-title="Example Input Sheet">
+                        <a style="text-decoration: none;" href="/static/ML-Flux_Example_CCM.xlsx"><i class="bi bi-file-earmark-excel"></i></a>  
                     </abbr>
                 </span>
                 <!--model dropdown input -->
