@@ -133,40 +133,41 @@
         </div>
         <!--background image -->
         <div class="low-opacity-image" id="img"> 
+            <!-- "ML Flux image -->
             <div style="position: absolute; top: 5%; max-height: 132px; overflow: hidden;"> <!--max-height will cut MLFlux img bottom -->
                 <a href="javascript:window.location.reload();">
                     <img src="/static/MLFlux_Logo2.png" height="165" alt="Metabolic Flux Analysis" title="Metabolic Flux Analysis by Machine Learning">
                 </a>
             </div>
-            <form method="post" action="/index" id="form" style="overflow: hidden;" enctype="multipart/form-data">
+            <form method="post" action="/index" id="form" onpointerenter="hideOverflow()" style="overflow: hidden;" enctype="multipart/form-data">
                 <h3>Input Model & Labeling Data: </h3>
                 <!-- "? mark" icon from Bootstrap icon for help message -->
-                <span class="icon" style="font-size:1rem;">     
+                <span class="icon" style="font-size:1rem;" onpointerenter="displayMsg()">     
                     <abbr data-title="1. Choose one of the pre-trained metabolic models &#10;2. Choose the excel file containing your data &#10;3. Enter the names of the sheets in which your labeling data are located">
                         <i class="bi bi-question-circle"></i>    
                     </abbr>
                 </span>
                 <!-- "pdf" icon from Bootstrap icon -->
-                <span class="icon" style="font-size:1rem;">
+                <span class="icon" style="font-size:1rem;" onpointerenter="displayMsg()">
                     <abbr data-title="ML-Flux Manual">
                         <a style="text-decoration: none;" href="/static/ML-FluxManual.pdf"><i class="bi bi-filetype-pdf"></i></a>   
                     </abbr>
                 </span>
                 <!-- "excel" icon from Bootstrap icon -->
-                <span class="icon" style="font-size:1rem;">
+                <span class="icon" style="font-size:1rem;" onpointerenter="displayMsg()">
                     <abbr data-title="Blank Template Sheet">
                         <a style="text-decoration: none;" href="/static/ML-Flux_Input_Template.xlsx"><i class="bi bi-file-earmark-excel"></i></a>  
                     </abbr>
                 </span>
                 <!-- "excel" icon from Bootstrap icon -->
-                <span class="icon" style="font-size:1rem;">
+                <span class="icon" style="font-size:1rem;" onpointerenter="displayMsg()">
                     <abbr data-title="Example Input Sheet">
                         <a style="text-decoration: none;" href="/static/ML-Flux_Example_CCM.xlsx"><i class="bi bi-file-earmark-excel"></i></a>  
                     </abbr>
                 </span>
                 <!--model dropdown input -->
                 <div class="input-group input-group-lg">    
-                    <select class="btn btn-light dropdown-toggle" id="dropdown" onchange="setDropdownSelected();" name="dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="true">
+                    <select class="btn btn-light dropdown-toggle" id="dropdown" onchange="setDropdownSelected()" name="dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="true">
                         <!-- please don't change the following space chars and don't add return line-->
                         <option selected disabled>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Choose Model&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
                         <option>Simple Test</option>
@@ -236,7 +237,15 @@
                 } 
             });
 
-            function setDropdownSelected(){
+            function displayMsg() { // display "? mark" messages
+                form.style.overflow = "visible";
+            }
+
+            function hideOverflow() { // remove the white space on the right side.
+                form.style.overflow = "hidden";              
+            }
+
+            function setDropdownSelected() {
                 if (dropdown.selectedIndex) {
                     dropdown_selected = true;
                 }
